@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Lora&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css" rel="stylesheet">
+  <title>Radio Telescope Project</title>
+  <style>
+  body {
+    font-family: 'Lora', sans-serif;
+    background: #0d0d0d;
+    color: #f0f0f0;
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    line-height: 1.6;
+  }
+  body::before,
+    body::after {
+    content: "";
+    position: fixed;
+    z-index: -1;
+    opacity: 0.7;
+    background-size: cover;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    }
+
+    body::before {
+    top: 10%;
+    left: 0;
+    width: 200px;
+    height: 200px;
+    background-image: url("Photos/LA_points.jpg");
+    }
+
+    body::after {
+    bottom: 10%;
+    right: 0;
+    width: 200px;
+    height: 200px;
+    background-image: url("Photos/Stepper_points.jpg");
+    }
+
+  h1, h2, h3 {
+    color: #55b7ff;
+    border-bottom: 1px solid #333;
+    padding-bottom: 4px;
+  }
+
+  nav {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  nav a {
+    color: #55b7ff;
+    margin: 0 10px;
+    text-decoration: none;
+    font-weight: bold;
+  }
+
+  nav a:hover {
+    text-decoration: underline;
+  }
+
+  a {
+    color: #55b7ff;
+    text-decoration: none;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  img {
+    max-width: 100%;
+    border: 2px solid #333;
+    border-radius: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: #1a1a1a;
+  }
+
+  th, td {
+    border: 1px solid #333;
+    padding: 8px 12px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #222;
+    color: #55b7ff;
+  }
+
+  pre {
+    background: #1a1a1a;
+    padding: 10px;
+    border-left: 4px solid #55b7ff;
+    overflow-x: auto;
+  }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 15px;
+    margin-top: 30px;
+  }
+  .gallery img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.4);
+  }
+  </style>
+</head>
+<body>
+<nav aria-label="Main navigation">
+  <a href="#software">Software</a> •
+  <a href="#procedure">Procedure</a> •
+  <a href="#math">Physics</a> •
+  <a href="#build">Build</a>
+</nav>
+
+<h1>Motorized Radio Telescope Project</h1>
+<p>This project is a fully functional radio telescope with azimuth/elevation control, GPS, and real-time tracking. Custom wiring, control box, and code—all 
+    designed and assembled from scratch. Total cost: ~$200.</p>
+<p>The telescope is tuned to 1420 MHz to observe the hydrogen line in the Milky Way. With a GPS module and RTC chip, it can timestamp data and align with 
+    galactic coordinates for accurate tracking. This setup also supports interferometry—combining multiple radio telescopes to form a larger array, improving 
+    resolution and allowing deeper exploration of the cosmos.</p>
+
+<h2>Wiring Diagram</h2>
+<img src="Wiring_Diagram.png" alt="Control box wiring diagram" />
+
+<h2>Connection Table</h2>
+<table>
+  <tr><th>Signal</th><th>Arduino Pin</th><th>Connected To</th></tr>
+  <tr><td>SDA</td><td>A4</td><td>RTC, OLED, LCD</td></tr>
+  <tr><td>SCL</td><td>A5</td><td>RTC, OLED, LCD</td></tr>
+  <tr><td>GPS RX</td><td>D0 (RX)</td><td>NEO-6M TX</td></tr>
+  <tr><td>GPS TX</td><td>D1 (TX)</td><td>NEO-6M RX</td></tr>
+  <tr><td>GPS PPS</td><td>D8</td><td>NEO-6M PPS</td></tr>
+  <tr><td>Elevation Pot</td><td>A0</td><td>Middle pin of Pot-1</td></tr>
+  <tr><td>Azimuth Pot</td><td>A1</td><td>Middle pin of Pot-2</td></tr>
+  <tr><td>Elevation IN1</td><td>D2</td><td>Stepper Driver IN1</td></tr>
+  <tr><td>Elevation IN2</td><td>D3</td><td>Stepper Driver IN2</td></tr>
+  <tr><td>Elevation ENA</td><td>D9 (PWM)</td><td>Stepper Driver ENA</td></tr>
+  <tr><td>Azimuth IN1</td><td>D4</td><td>L298N IN1</td></tr>
+  <tr><td>Azimuth IN2</td><td>D5</td><td>L298N IN2</td></tr>
+  <tr><td>Azimuth ENA</td><td>D6 (PWM)</td><td>L298N ENA</td></tr>
+</table>
+<p>Inside the control box, I use a mini breadboard to distribute SDA, SCL, 5V, and GND from the Arduino to all connected modules.</p>
+
+<h2>Control Box Photo Gallery</h2>
+<div class="gallery">
+  <a href="Photos/Enclosed_2.jpg" data-lightbox="gallery" data-title="Control Box Outside Front View">
+    <img src="Photos/Enclosed_2.jpg" alt="Control Box Outside Front View" loading="lazy">
+  </a>
+  <a href="Photos/Outside_NoLid.jpg" data-lightbox="gallery" data-title="Control Box Outside Front View No Lid">
+    <img src="Photos/Outside_NoLid.jpg" alt="Control Box Outside Front View No Lid" loading="lazy">
+  </a>
+  <a href="Photos/Stepper_points.jpg" data-lightbox="gallery" data-title="Stepper Motor Connection Points and 24V Connection Point">
+    <img src="Photos/Stepper_points.jpg" alt="Stepper Motor Connection Points and 24V Connection Point" loading="lazy">
+  </a>
+  <a href="Photos/LA_points.jpg" data-lightbox="gallery" data-title="Linear Actuator Connection Points">
+    <img src="Photos/LA_points.jpg" alt="Linear Actuator Connection Points" loading="lazy">
+  </a>
+  <a href="Photos/Screens.jpg" data-lightbox="gallery" data-title="Front Panel -- OLED and LCD Screens">
+    <img src="Photos/Screens.jpg" alt="Front Panel -- OLED and LCD Screens" loading="lazy">
+  </a>
+  <a href="Photos/Top_view2.jpg" data-lightbox="gallery" data-title="Internal Top View of Wiring">
+    <img src="Photos/Top_view2.jpg" alt="Internal Top View of Wiring" loading="lazy">
+  </a>
+  <a href="Photos/Wiring_1.jpg" data-lightbox="gallery" data-title="Wiring Closeup -- Bottom">
+    <img src="Photos/Wiring_1.jpg" alt="Wiring Closeup -- Bottom" loading="lazy">
+  </a>
+  <a href="Photos/Wiring_2.jpg" data-lightbox="gallery" data-title="Wiring Closeup -- Middle">
+    <img src="Photos/Wiring_2.jpg" alt="Wiring Closeup -- Middle" loading="lazy">
+  </a>
+  <a href="Photos/Wiring_3.jpg" data-lightbox="gallery" data-title="Wiring Closeup -- Top">
+    <img src="Photos/Wiring_3.jpg" alt="Wiring Closeup -- Top" loading="lazy">
+  </a>
+  <a href="Photos/Wiring_4.jpg" data-lightbox="gallery" data-title="Wiring Closeup -- Bottom and Middle">
+    <img src="Photos/Wiring_4.jpg" alt="Wiring Closeup -- Bottom and Middle" loading="lazy">
+  </a>
+  <a href="Photos/Potentiometers.jpg" data-lightbox="gallery" data-title="Potentiometers for Manual Azimuthal and Elevational Control">
+    <img src="Photos/Potentiometers.jpg" alt="Potentiometers for Manual Azimuthal and Elevational Control" loading="lazy">
+  </a>
+</div>
+
+<h2>Parts List</h2>
+<p><a href="Radio_Telescope_Links.html" download>Download Parts and Software List (HTML)</a></p>
+
+<h2>3D Printed Components</h2>
+<p>The control box enclosure, motor mounts, gears, and most of the structural components were custom-designed and 3D printed. This kept costs low and allowed 
+    everything to fit perfectly with the electronics.</p>
+<p>Parts were printed in PETG for strength and accuracy. Design files can be shared on request.</p>
+
+<h2 id="software">Software</h2>
+<h3>Arduino Control Code</h3>
+<p>The Arduino handles real-time control of motors, GPS, RTC, and displays. It reads potentiometer input and moves the dish accordingly. Displays update 
+    continuously with tracking info.</p>
+<p>The current Arduino code is designed for manual control using potentiometers to adjust azimuth and elevation. However, the system is fully capable of 
+    automated tracking—by using GPS and RTC data to compute galactic coordinates, the code could be extended to point the dish automatically.</p>
+<p><a href="control_box_code.ino" download>Download Arduino Code</a></p>
+
+<h3>SDR & Signal Processing Tools</h3>
+<p>To analyze incoming radio signals, I used:</p>
+<ul>
+  <li>GNU Radio – Signal processing workflows</li>
+  <li>SDR# – Real-time signal visualization</li>
+  <li>Virgo – Logging data from the SDR</li>
+  <li>Chronolapse – Image/time-lapse capture</li>
+  <li>gr-osmoSDR – SDR source support in GNU Radio</li>
+</ul>
+<p>Links to these tools are included in the <a href="Radio_Telescope_Links.html" download>Parts and Software List</a>.</p>
+
+<h2>Demo</h2>
+<p></p>
+
+<h2 id="math">Physics & Math</h2>
+<p>This telescope is tuned to 1420 MHz, the emission frequency of neutral hydrogen (the 21 cm line). Observing this line allows for mapping hydrogen distribution 
+    in the Milky Way, which traces galactic structure.</p>
+<p>Using GPS coordinates (latitude, longitude) and RTC time, the telescope can compute the Local Sidereal Time (LST), then convert Right Ascension (RA) and 
+    Declination (Dec) to Azimuth and Elevation using spherical trigonometry. This enables alignment with any target in the sky.</p>
+<p>The spatial resolution is limited by the dish diameter and observing wavelength. The resolving angle θ can be estimated using:</p>
+<pre>θ ≈ λ / D</pre>
+<p>where λ = 21 cm (wavelength) and D is the dish diameter.</p>
+<p>Multiple telescopes can be combined into an interferometer, where resolution improves with baseline separation rather than dish size—allowing deeper and 
+    sharper imaging.</p>
+
+<h2>About</h2>
+<p>Fritzing diagram, parts sourcing, and build process documented here.</p>
+<p>Helpful Links, Parts List, Software Downloads:<br><a href="Radio_Telescope_Links.html" download>Parts and Software List</a></p>
+<p>Fritzing Diagram Link:<br><a href="Control_Box.fzz" download>Fritzing Diagram</a> (-- Schematic view only --)</p>
+<p>Arduino Code:<br><a href="control_box_code.ino" download>Download Arduino Code</a></p>
+
+<h2 id="build">Build Process</h2>
+<p>This project took about a month to design, build, and test. Initially, I planned to repurpose a stationary satellite dish, but I realized that full azimuth and 
+    elevation control was needed. I decided to make the system modular, upgradable, and interferometer-ready. I used an old chair base with wheels for portability 
+    and 3D printed most of the structure for precision and weight savings. The signal is routed through a NooElec SAWbird+ 1420 MHz LNA (Low-Noise-Amplifier)
+    to allow a clear and strong signal in processing.</p>
+
+<h2>Mounting & Motion</h2>
+<p>The dish is rotated azimuthally using a NEMA 23 stepper motor connected to a 64:1 Banebots gearbox. The gearbox output shaft is attached to the dish with a 
+    custom 3D-printed mount. For elevation, a 12V linear actuator is mounted to the top of the dish. Extending the actuator lowers the elevation; retracting it 
+    raises the focal point upward.</p>
+
+<h2>Azimuth Accuracy</h2>
+<p>The azimuth system uses a NEMA 23 stepper motor with a 1.8° step angle, paired with a 64:1 gearbox. This gives:</p>
+<ul>
+  <li><strong>Full-step resolution:</strong> 1.8° / 64 = <strong>0.028125° per step</strong></li>
+  <li><strong>With 1/16 microstepping:</strong> 0.028125° / 16 = <strong>0.00176° per microstep</strong></li>
+</ul>
+<p>This enables smooth, high-precision azimuth control—especially when microstepping is enabled through a compatible driver.</p>
+
+<h2 id="procedure">Procedure</h2>
+<ol>
+  <li>Power on the control box using the 12V and 24V adapters.</li>
+  <li>Wait for the OLED and LCD displays to initialize and begin showing GPS and RTC data.</li>
+  <li>Use the azimuth and elevation potentiometers to manually aim the dish. Values will be shown live on the LCD screen.</li>
+  <li>Open your SDR software (e.g., SDR# or GNU Radio) and tune to 1420 MHz.</li>
+  <li>Begin signal capture or visualization using tools like Virgo or Chronolapse.</li>
+  <li>Optional: Adjust the dish to scan across the sky and monitor changes in signal strength.</li>
+  <li>For long-term observation, log GPS, time, and frequency data using your preferred software setup.</li>
+</ol>
+<p>Future versions of the software may support automatic pointing based on target coordinates and real-time tracking.</p>
+
+<footer style="margin-top: 40px; border-top: 1px solid #333; padding-top: 10px; font-size: 0.9em; text-align: center;">
+  <p>Created by Jackson Stingley • Last updated: July 2025</p>
+</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/js/lightbox-plus-jquery.min.js"></script>
+</body>
+</html>
